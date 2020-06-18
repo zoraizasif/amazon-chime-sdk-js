@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Updated cloudwatch log stream ID to have attendee_id
 - Fixed Firefox 68 codec preference issues
+- Fixing the ability to choose default input in browsers when default changes
 
 ## [1.9.0] - 2020-06-12
 
