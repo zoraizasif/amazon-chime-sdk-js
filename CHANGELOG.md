@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Change DefaultDeviceController video MediaTrackConstraint parameters to be "ideal" explicitly
 
 ### Removed
+- Remove unsupported device demo
 
 ### Fixed
 - Fix typo in VideoStreamDescription when stream is disabled by WebRTC
