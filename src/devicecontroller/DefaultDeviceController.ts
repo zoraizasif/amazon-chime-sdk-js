@@ -612,7 +612,7 @@ export default class DefaultDeviceController implements DeviceControllerBasedMed
         }`
       );
       return Date.now() - startTimeMs <
-        DefaultDeviceController.permissionDeniedOriginDetectionThresholdMs
+      DefaultDeviceController.permissionDeniedOriginDetectionThresholdMs
         ? DevicePermission.PermissionDeniedByBrowser
         : DevicePermission.PermissionDeniedByUser;
     }
@@ -658,7 +658,7 @@ export default class DefaultDeviceController implements DeviceControllerBasedMed
       }
     }
     return Date.now() - startTimeMs <
-      DefaultDeviceController.permissionGrantedOriginDetectionThresholdMs
+    DefaultDeviceController.permissionGrantedOriginDetectionThresholdMs
       ? DevicePermission.PermissionGrantedByBrowser
       : DevicePermission.PermissionGrantedByUser;
   }
@@ -676,6 +676,8 @@ export default class DefaultDeviceController implements DeviceControllerBasedMed
     kind: string,
     device: Device
   ): MediaStreamConstraints | null {
+    let supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
+    console.log('Supported Constraints in this browser ' + JSON.stringify(supportedConstraints));
     let trackConstraints: MediaTrackConstraints = {};
     if (device === '') {
       device = null;
