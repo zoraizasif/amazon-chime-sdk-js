@@ -110,6 +110,10 @@ export default class DefaultBrowserBehavior implements BrowserBehavior {
     return this.isSafari();
   }
 
+  requiresNoExactMediaStreamConstraints(): boolean {
+    return this.isIOSSafari() && (this.version() === '12.0.0' || this.version() === '12.1.0');
+  }
+
   getDisplayMediaAudioCaptureSupport(): boolean {
     return this.isChrome() || this.isEdge();
   }
