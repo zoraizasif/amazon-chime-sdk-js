@@ -7,6 +7,8 @@ import IntervalScheduler from '../scheduler/IntervalScheduler';
 import Log from './Log';
 
 export default class MeetingSessionPOSTLogger {
+  recordStorage = {};
+
   private logCapture: Log[] = [];
   private sequenceNumber: number = 0;
   private lock = false;
@@ -47,6 +49,14 @@ export default class MeetingSessionPOSTLogger {
 
   error(msg: string): void {
     this.log(LogLevel.ERROR, msg);
+  }
+
+  record(
+    name: string,
+    attributes?: { [attributeName: string]: string | string [] },
+    metrics?: { [metricsName: string]: number }
+  ): void {
+    // TODO:
   }
 
   setLogLevel(level: LogLevel): void {

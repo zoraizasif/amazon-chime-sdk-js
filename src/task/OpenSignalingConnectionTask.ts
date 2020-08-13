@@ -36,35 +36,42 @@ export default class OpenSignalingConnectionTask extends BaseTask {
       )
     );
 
-    await new Promise<void>((resolve, reject) => {
-      class WebSocketOpenInterceptor implements SignalingClientObserver, TaskCanceler {
-        constructor(private signalingClient: SignalingClient) {}
+    const startTime = Date.now();
+    try {
+      await new Promise<void>((resolve, reject) => {
+        class WebSocketOpenInterceptor implements SignalingClientObserver, TaskCanceler {
+          constructor(private signalingClient: SignalingClient) {}
 
-        cancel(): void {
-          this.signalingClient.removeObserver(this);
-          reject(
-            new Error(
-              `OpenSignalingConnectionTask got canceled while waiting to open signaling connection`
-            )
-          );
-        }
+          cancel(): void {
+            this.signalingClient.removeObserver(this);
+            reject(
+              new Error(
+                `OpenSignalingConnectionTask got canceled while waiting to open signaling connection`
+              )
+            );
+          }
 
-        handleSignalingClientEvent(event: SignalingClientEvent): void {
-          switch (event.type) {
-            case SignalingClientEventType.WebSocketOpen:
-              this.signalingClient.removeObserver(this);
-              resolve();
-              break;
-            case SignalingClientEventType.WebSocketFailed:
-              this.signalingClient.removeObserver(this);
-              reject(new Error('WebSocket connection failed'));
-              break;
+          handleSignalingClientEvent(event: SignalingClientEvent): void {
+            switch (event.type) {
+              case SignalingClientEventType.WebSocketOpen:
+                this.signalingClient.removeObserver(this);
+                resolve();
+                break;
+              case SignalingClientEventType.WebSocketFailed:
+                this.signalingClient.removeObserver(this);
+                reject(new Error('WebSocket connection failed'));
+                break;
+            }
           }
         }
-      }
-      const interceptor = new WebSocketOpenInterceptor(this.context.signalingClient);
-      this.context.signalingClient.registerObserver(interceptor);
-      this.taskCanceler = interceptor;
-    });
+        const interceptor = new WebSocketOpenInterceptor(this.context.signalingClient);
+        this.context.signalingClient.registerObserver(interceptor);
+        this.taskCanceler = interceptor;
+      });
+    } catch (error) {
+      throw error;
+    } finally {
+      this.context.openSignalingConnectionDuration = Math.round(Date.now() - startTime);
+    }
   }
 }

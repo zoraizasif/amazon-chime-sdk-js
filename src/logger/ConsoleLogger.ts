@@ -24,6 +24,8 @@ import LogLevel from './LogLevel';
  * ```
  */
 export default class ConsoleLogger implements Logger {
+  recordStorage = {};
+
   name: string;
   level: LogLevel;
 
@@ -49,6 +51,25 @@ export default class ConsoleLogger implements Logger {
       return;
     }
     this.log(LogLevel.DEBUG, debugFunction());
+  }
+
+  record(
+    name: string,
+    attributes?: { [attributeName: string]: string | string [] },
+    metrics?: { [metricsName: string]: number }
+  ): void {
+    if (LogLevel.RECORD < this.level) {
+      return;
+    }
+
+    const timestamp = new Date().toISOString();
+    const logPrefix = `${timestamp} [${LogLevel[LogLevel.RECORD]}] ${this.name} - `;
+
+    console.debug(logPrefix, {
+      name,
+      attributes,
+      metrics
+    })
   }
 
   setLogLevel(level: LogLevel): void {

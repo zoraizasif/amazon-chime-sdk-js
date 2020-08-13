@@ -30,6 +30,22 @@ export default interface Logger {
   error(msg: string): void;
 
   /**
+   * Records an event if the log level is equal to or lower than record level.
+   */
+  record(
+    name: string,
+    attributes?: { [attributeName: string]: string | string [] },
+    metrics?: { [metricsName: string]: number }
+  ): void;
+
+  /**
+   * Stores data for the record event. (TODO: Need to find a better way than making the logger bigger)
+   */
+  recordStorage: {
+    [itemName: string]: string | string[] | number
+  };
+
+  /**
    * Sets the log level.
    */
   setLogLevel(level: LogLevel): void;

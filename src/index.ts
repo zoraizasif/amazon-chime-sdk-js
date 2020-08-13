@@ -270,6 +270,7 @@ import StreamMetricReport from './clientmetricreport/StreamMetricReport';
 import SubscribeAndReceiveSubscribeAckTask from './task/SubscribeAndReceiveSubscribeAckTask';
 import Task from './task/Task';
 import TaskCanceler from './taskcanceler/TaskCanceler';
+import TaskError from './task/TaskError';
 import TaskStatus from './task/TaskStatus';
 import TimeoutScheduler from './scheduler/TimeoutScheduler';
 import TimeoutTask from './task/TimeoutTask';
@@ -570,6 +571,7 @@ export {
   SubscribeAndReceiveSubscribeAckTask,
   Task,
   TaskCanceler,
+  TaskError,
   TaskStatus,
   TimeoutScheduler,
   TimeoutTask,

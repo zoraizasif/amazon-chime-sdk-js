@@ -8,6 +8,8 @@ import LogLevel from './LogLevel';
  * [[NoOpLogger]] does not log any message.
  */
 export default class NoOpLogger implements Logger {
+  recordStorage = {};
+
   level: LogLevel;
 
   constructor(level = LogLevel.OFF) {
@@ -19,6 +21,12 @@ export default class NoOpLogger implements Logger {
   warn(_msg: string): void {}
 
   error(_msg: string): void {}
+
+  record(
+    name: string,
+    attributes?: { [attributeName: string]: string | string [] },
+    metrics?: { [metricsName: string]: number }
+  ): void {}
 
   debug(debugFunction: () => string): void {
     if (LogLevel.DEBUG < this.level) {

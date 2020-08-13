@@ -31,11 +31,22 @@ export default class ParallelGroupTask extends BaseTask {
       taskResults.push(task.run());
     }
     const failures: string[] = [];
+    const failedTasks: ({ name: string, message: string })[] = [];
+
     for (let i = 0; i < taskResults.length; i++) {
       try {
         await taskResults[i];
       } catch (err) {
         failures.push(`task ${this.tasksToRunParallel[i].name()} failed: ${err.message}`);
+
+        if (err.failedTasks) {
+          failedTasks.push(...err.failedTasks);
+        } else {
+          failedTasks.push({
+            name: this.tasksToRunParallel[i].name(),
+            message: err.message
+          });
+        }
       }
       this.logger.info(
         `parallel group task ${this.name()} completed subtask ${this.tasksToRunParallel[i].name()}`
@@ -43,7 +54,7 @@ export default class ParallelGroupTask extends BaseTask {
     }
     if (failures.length > 0) {
       const failureMessage = failures.join(', ');
-      this.logAndThrow(`parallel group task ${this.name()} failed for tasks: ${failureMessage}`);
+      this.logAndThrow(`parallel group task ${this.name()} failed for tasks: ${failureMessage}`, failedTasks);
     }
     this.logger.info(`parallel group task ${this.name()} completed`);
   }

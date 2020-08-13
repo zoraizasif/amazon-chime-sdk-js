@@ -32,7 +32,7 @@ export default class DefaultMeetingSession implements MeetingSession {
   private screenShareViewFacade: ScreenShareViewFacade;
   private audioVideoFacade: AudioVideoFacade;
 
-  private static RECONNECT_TIMEOUT_MS = 120 * 1000;
+  private static RECONNECT_TIMEOUT_MS = 5 * 1000;
   private static RECONNECT_FIXED_WAIT_MS = 0;
   private static RECONNECT_SHORT_BACKOFF_MS = 1 * 1000;
   private static RECONNECT_LONG_BACKOFF_MS = 5 * 1000;
@@ -44,6 +44,7 @@ export default class DefaultMeetingSession implements MeetingSession {
   ) {
     this._configuration = configuration;
     this._logger = logger;
+    this._logger.recordStorage.meetingSessionCount = ((this._logger.recordStorage.meetingSessionCount as number) || 0) + 1;
 
     this.checkBrowserSupportAndFeatureConfiguration();
 

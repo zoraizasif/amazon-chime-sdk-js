@@ -14,6 +14,7 @@ import DefaultVideoTile from '../videotile/DefaultVideoTile';
 import Device from './Device';
 import DevicePermission from './DevicePermission';
 import DeviceSelection from './DeviceSelection';
+import Versioning from '../versioning/Versioning';
 
 export default class DefaultDeviceController implements DeviceControllerBasedMediaStreamBroker {
   private static permissionGrantedOriginDetectionThresholdMs = 1000;
@@ -617,21 +618,27 @@ export default class DefaultDeviceController implements DeviceControllerBasedMed
     }
     const startTimeMs = Date.now();
     const newDevice: DeviceSelection = new DeviceSelection();
+
     try {
       this.logger.info(
         `requesting new ${kind} device with constraint ${JSON.stringify(proposedConstraints)}`
       );
       const stream = this.deviceAsMediaStream(device);
+
       if (kind === 'audio' && device === null) {
         newDevice.stream = DefaultDeviceController.createEmptyAudioDevice() as MediaStream;
         newDevice.constraints = null;
+        this.logger.recordStorage.audioInputDevice = 'null';
       } else if (stream) {
         this.logger.info(`using media stream ${stream.id} for ${kind} device`);
         newDevice.stream = stream;
         newDevice.constraints = proposedConstraints;
+        this.logger.recordStorage.audioInputDevice = 'mediaStream';
       } else {
         newDevice.stream = await navigator.mediaDevices.getUserMedia(proposedConstraints);
         newDevice.constraints = proposedConstraints;
+        this.logger.recordStorage.audioInputDevice = 'mediaStream';
+
         if (kind === 'video' && this.lastNoVideoInputDeviceCount > callCount) {
           this.logger.warn(
             `ignored to get video device for constraints ${JSON.stringify(
@@ -654,6 +661,30 @@ export default class DefaultDeviceController implements DeviceControllerBasedMed
       }
       newDevice.groupId = this.getGroupIdFromDeviceId(kind, this.getDeviceIdStr(device));
     } catch (error) {
+      try {
+        this.logger.recordStorage.audioInputDevice = `error: ${error.name}`;
+        this.logger.record(
+          'chooseAudioInputDeviceDidFail',
+          {
+            browserVersion: this.browserBehavior.version(),
+            browserMajorVersion: `${this.browserBehavior.majorVersion()}`,
+            browserName: this.browserBehavior.name(),
+            sdkName: Versioning.sdkName,
+            sdkVersion: Versioning.sdkVersion,
+            meetingId: this.boundAudioVideoController ? this.boundAudioVideoController.configuration.meetingId : 'undefined',
+            attendeeId: this.boundAudioVideoController ? this.boundAudioVideoController.configuration.credentials.attendeeId : 'undefined',
+            audioInputDevice: this.logger.recordStorage.audioInputDevice,
+            getUserMediaErrorName: `${error.name}`,
+            getUserMediaErrorMessage: `${error.message}`
+          },
+          {
+            meetingSessionCount: (this.logger.recordStorage.meetingSessionCount as number) || 0
+          }
+        );
+      } catch (error) {
+        this.logger.error(`chooseAudioInputDeviceDidFail record fails${error ? ` with error: ${error.message}` : ``}`);
+      }
+
       this.logger.error(
         `failed to get ${kind} device for constraints ${JSON.stringify(proposedConstraints)}: ${
           error.name

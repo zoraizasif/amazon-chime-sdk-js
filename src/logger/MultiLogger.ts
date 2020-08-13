@@ -8,6 +8,8 @@ import LogLevel from './LogLevel';
  * MultiLogger writes logs to multiple other loggers
  */
 export default class MultiLogger implements Logger {
+  recordStorage = {};
+
   private _loggers: Logger[];
 
   constructor(...loggers: Logger[]) {
@@ -29,6 +31,20 @@ export default class MultiLogger implements Logger {
   error(msg: string): void {
     for (const logger of this._loggers) {
       logger.error(msg);
+    }
+  }
+
+  record(
+    name: string,
+    attributes?: { [attributeName: string]: string | string [] },
+    metrics?: { [metricsName: string]: number }
+  ): void {
+    for (const logger of this._loggers) {
+      logger.record(
+        name,
+        attributes,
+        metrics
+      );
     }
   }
 

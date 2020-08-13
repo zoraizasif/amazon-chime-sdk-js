@@ -114,4 +114,8 @@ export default class AudioVideoControllerState {
   videoDeviceInformation: { [id: string]: string } = {};
 
   enableSimulcast: boolean = false;
+
+  receiveTURNCredentialsDuration: number | null = null;
+
+  openSignalingConnectionDuration: number | null = null;
 }

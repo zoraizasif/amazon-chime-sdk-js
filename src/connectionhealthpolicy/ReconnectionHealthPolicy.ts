@@ -56,6 +56,16 @@ export default class ReconnectionHealthPolicy extends BaseConnectionHealthPolicy
     }
     const needsReconnect = noPacketsReceivedRecently || missedPongsRecently || hasBadAudioDelay;
     if (needsReconnect) {
+      if (noPacketsReceivedRecently) {
+        this.logger.recordStorage.noPacketsReceivedRecently = ((this.logger.recordStorage.noPacketsReceivedRecently as number) || 0) + 1;
+      }
+      if (missedPongsRecently) {
+        this.logger.recordStorage.missedPongsRecently = ((this.logger.recordStorage.missedPongsRecently as number) || 0) + 1;
+      }
+      if (hasBadAudioDelay) {
+        this.logger.recordStorage.hasBadAudioDelay = ((this.logger.recordStorage.hasBadAudioDelay as number) || 0) + 1;
+      }
+
       this.logger.warn(
         `reconnection recommended due to: no packets received: ${noPacketsReceivedRecently}, missed pongs: ${missedPongsRecently}, bad audio delay: ${hasBadAudioDelay}`
       );

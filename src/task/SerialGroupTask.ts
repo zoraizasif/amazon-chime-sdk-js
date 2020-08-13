@@ -42,7 +42,13 @@ export default class SerialGroupTask extends BaseTask {
       } catch (err) {
         this.logAndThrow(
           `serial group task ${this.name()} was canceled due to subtask ` +
-            `${this.currentTask.name()} error: ${err.message}`
+            `${this.currentTask.name()} error: ${err.message}`,
+          err.failedTasks || [
+            {
+              name: this.currentTask.name(),
+              message: err.message 
+            }
+          ]
         );
       } finally {
         this.currentTask = null;

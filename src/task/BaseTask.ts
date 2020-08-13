@@ -4,6 +4,7 @@
 import Logger from '../logger/Logger';
 import Task from './Task';
 import TaskStatus from './TaskStatus';
+import TaskError from './TaskError';
 
 /*
  * [[BaseTask]] provides common utilities for task implementations.
@@ -24,7 +25,9 @@ export default abstract class BaseTask implements Task {
   cancel(): void {}
 
   name(): string {
-    return this.parentTask ? `${this.parentTask.name()}/${this.taskName}` : this.taskName;
+    // TODO: Remove or create another method for the task name only.
+    this.parentTask;
+    return this.taskName;
   }
 
   setParent(parentTask: Task): void {
@@ -35,9 +38,9 @@ export default abstract class BaseTask implements Task {
     return this.status;
   }
 
-  protected logAndThrow(message: string): void {
+  protected logAndThrow(message: string, failedTasks?: ({ name: string, message: string })[]): void {
     this.logger.info(message);
-    throw new Error(message);
+    throw new TaskError(message, failedTasks);
   }
 
   private async baseRun(originalRun: () => Promise<void>): Promise<void> {

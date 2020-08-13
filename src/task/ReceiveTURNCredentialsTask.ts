@@ -60,7 +60,10 @@ export default class ReceiveTURNCredentialsTask extends BaseTask {
       };
 
       try {
+        const startTime = Date.now();
         const responseBody = await fetch(Versioning.urlWithVersion(this.url), options);
+        this.context.receiveTURNCredentialsDuration = Math.round(Date.now() - startTime);
+
         this.context.logger.info(`received TURN credentials`);
         if (responseBody.status && responseBody.status === 403) {
           reject(
