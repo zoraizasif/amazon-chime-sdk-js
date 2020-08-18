@@ -79,6 +79,11 @@ export default class MeetingSessionConfiguration {
   enableSimulcastForUnifiedPlanChromiumBasedBrowsers: boolean = false;
 
   /**
+   * Feature flag to disable Simulcast in two party calls
+   */
+  disableSimulcastInTwoPartyCalls: boolean = true;
+
+  /**
    * Video downlink bandwidth policy to determine which remote videos
    * are subscribed to.
    */

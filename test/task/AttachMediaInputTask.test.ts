@@ -178,7 +178,7 @@ describe('AttachMediaInputTask', () => {
   describe('Simulcast', () => {
     it('could change transceiver encoding parameter', done => {
       context.enableSimulcast = true;
-      context.videoUplinkBandwidthPolicy = new SimulcastUplinkPolicy('self-attendee', logger);
+      context.videoUplinkBandwidthPolicy = new SimulcastUplinkPolicy('self-attendee', true, logger);
       // @ts-ignore
       navigator.userAgent = 'Chrome/77.0.3865.75';
       context.browserBehavior = new DefaultBrowserBehavior({

@@ -444,7 +444,7 @@ describe('MonitorTask', () => {
       context.videoTileController.startLocalVideoTile();
       context.videoStreamIndex = new SimulcastVideoStreamIndex(logger);
 
-      context.videoUplinkBandwidthPolicy = new TestVideoUplinkPolicy('self', logger);
+      context.videoUplinkBandwidthPolicy = new TestVideoUplinkPolicy('self', true, logger);
       context.videoDownlinkBandwidthPolicy = new TestDownlinkPolicy(logger, null);
       const spy = sinon.spy(context.audioVideoController, 'update');
       // task.handleSignalingClientEvent(createSignalingEventForBitrateFrame(logger));

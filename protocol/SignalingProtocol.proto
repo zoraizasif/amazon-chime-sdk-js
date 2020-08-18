@@ -111,6 +111,7 @@ message SdkIndexFrame {
     optional bool at_capacity = 1;
     repeated SdkStreamDescriptor sources = 2;
     repeated uint32 paused_at_source_ids = 3;
+    optional uint32 num_participants = 4;
 }
 
 message SdkPauseResumeFrame {

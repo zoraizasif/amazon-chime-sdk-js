@@ -1075,6 +1075,9 @@ export interface ISdkIndexFrame {
 
     /** SdkIndexFrame pausedAtSourceIds */
     pausedAtSourceIds?: (number[]|null);
+
+    /** SdkIndexFrame numParticipants */
+    numParticipants?: (number|null);
 }
 
 /** Represents a SdkIndexFrame. */
@@ -1094,6 +1097,9 @@ export class SdkIndexFrame implements ISdkIndexFrame {
 
     /** SdkIndexFrame pausedAtSourceIds. */
     public pausedAtSourceIds: number[];
+
+    /** SdkIndexFrame numParticipants. */
+    public numParticipants: number;
 
     /**
      * Creates a new SdkIndexFrame instance using the specified properties.

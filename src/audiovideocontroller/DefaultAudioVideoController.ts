@@ -239,6 +239,7 @@ export default class DefaultAudioVideoController implements AudioVideoController
     if (this.enableSimulcast) {
       this.meetingSessionContext.videoUplinkBandwidthPolicy = new SimulcastUplinkPolicy(
         this.configuration.credentials.attendeeId,
+        this.configuration.disableSimulcastInTwoPartyCalls,
         this.meetingSessionContext.logger
       );
       this.meetingSessionContext.videoDownlinkBandwidthPolicy = new VideoAdaptiveProbePolicy(

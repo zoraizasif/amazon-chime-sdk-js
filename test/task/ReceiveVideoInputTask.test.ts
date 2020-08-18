@@ -99,7 +99,11 @@ describe('ReceiveVideoInputTask', () => {
     it('will acquire the video input and query constraint', async () => {
       context.videoStreamIndex = new SimulcastVideoStreamIndex(new NoOpLogger());
       context.enableSimulcast = true;
-      context.videoUplinkBandwidthPolicy = new SimulcastUplinkPolicy('attendee', new NoOpLogger());
+      context.videoUplinkBandwidthPolicy = new SimulcastUplinkPolicy(
+        'attendee',
+        true,
+        new NoOpLogger()
+      );
       context.videoTileController.startLocalVideoTile();
       context.mediaStreamBroker = new MockMediaStreamBroker({
         acquireVideoInputDeviceSucceeds: true,
@@ -113,7 +117,11 @@ describe('ReceiveVideoInputTask', () => {
       domMockBehavior.applyConstraintSucceeds = false;
       context.videoStreamIndex = new SimulcastVideoStreamIndex(new NoOpLogger());
       context.enableSimulcast = true;
-      context.videoUplinkBandwidthPolicy = new SimulcastUplinkPolicy('attendee', new NoOpLogger());
+      context.videoUplinkBandwidthPolicy = new SimulcastUplinkPolicy(
+        'attendee',
+        true,
+        new NoOpLogger()
+      );
       context.videoTileController.startLocalVideoTile();
       context.mediaStreamBroker = new MockMediaStreamBroker({
         acquireVideoInputDeviceSucceeds: true,
@@ -166,6 +174,7 @@ describe('ReceiveVideoInputTask', () => {
       context.enableSimulcast = true;
       context.videoUplinkBandwidthPolicy = new SimulcastUplinkPolicy(
         'self-attendee',
+        false,
         new NoOpLogger()
       );
     });

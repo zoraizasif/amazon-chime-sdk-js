@@ -2868,6 +2868,7 @@ $root.SdkIndexFrame = (function() {
      * @property {boolean|null} [atCapacity] SdkIndexFrame atCapacity
      * @property {Array.<ISdkStreamDescriptor>|null} [sources] SdkIndexFrame sources
      * @property {Array.<number>|null} [pausedAtSourceIds] SdkIndexFrame pausedAtSourceIds
+     * @property {number|null} [numParticipants] SdkIndexFrame numParticipants
      */
 
     /**
@@ -2912,6 +2913,14 @@ $root.SdkIndexFrame = (function() {
     SdkIndexFrame.prototype.pausedAtSourceIds = $util.emptyArray;
 
     /**
+     * SdkIndexFrame numParticipants.
+     * @member {number} numParticipants
+     * @memberof SdkIndexFrame
+     * @instance
+     */
+    SdkIndexFrame.prototype.numParticipants = 0;
+
+    /**
      * Creates a new SdkIndexFrame instance using the specified properties.
      * @function create
      * @memberof SdkIndexFrame
@@ -2943,6 +2952,8 @@ $root.SdkIndexFrame = (function() {
         if (message.pausedAtSourceIds != null && message.pausedAtSourceIds.length)
             for (var i = 0; i < message.pausedAtSourceIds.length; ++i)
                 writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.pausedAtSourceIds[i]);
+        if (message.numParticipants != null && message.hasOwnProperty("numParticipants"))
+            writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.numParticipants);
         return writer;
     };
 
@@ -2994,6 +3005,9 @@ $root.SdkIndexFrame = (function() {
                         message.pausedAtSourceIds.push(reader.uint32());
                 } else
                     message.pausedAtSourceIds.push(reader.uint32());
+                break;
+            case 4:
+                message.numParticipants = reader.uint32();
                 break;
             default:
                 reader.skipType(tag & 7);
@@ -3049,6 +3063,9 @@ $root.SdkIndexFrame = (function() {
                 if (!$util.isInteger(message.pausedAtSourceIds[i]))
                     return "pausedAtSourceIds: integer[] expected";
         }
+        if (message.numParticipants != null && message.hasOwnProperty("numParticipants"))
+            if (!$util.isInteger(message.numParticipants))
+                return "numParticipants: integer expected";
         return null;
     };
 
@@ -3083,6 +3100,8 @@ $root.SdkIndexFrame = (function() {
             for (var i = 0; i < object.pausedAtSourceIds.length; ++i)
                 message.pausedAtSourceIds[i] = object.pausedAtSourceIds[i] >>> 0;
         }
+        if (object.numParticipants != null)
+            message.numParticipants = object.numParticipants >>> 0;
         return message;
     };
 
@@ -3103,8 +3122,10 @@ $root.SdkIndexFrame = (function() {
             object.sources = [];
             object.pausedAtSourceIds = [];
         }
-        if (options.defaults)
+        if (options.defaults) {
             object.atCapacity = false;
+            object.numParticipants = 0;
+        }
         if (message.atCapacity != null && message.hasOwnProperty("atCapacity"))
             object.atCapacity = message.atCapacity;
         if (message.sources && message.sources.length) {
@@ -3117,6 +3138,8 @@ $root.SdkIndexFrame = (function() {
             for (var j = 0; j < message.pausedAtSourceIds.length; ++j)
                 object.pausedAtSourceIds[j] = message.pausedAtSourceIds[j];
         }
+        if (message.numParticipants != null && message.hasOwnProperty("numParticipants"))
+            object.numParticipants = message.numParticipants;
         return object;
     };
 
