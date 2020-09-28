@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Added
+- Add simulcast uplink policy layer change notification methods and observers
+- Add `getRemoteVideoSources` method and `remoteVideoSourcesDidChange` observer
+
+### Changed
+
+### Removed
+
+### Fixed
+
 ## [1.20.0] - 2020-10-15
 ### Added
 - Add a Travis check to make sure version update
@@ -16,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add extended debugging for saucelab sessions
 - Add data message throttle limits to documentation
 - Add `audioSessionId` to join frame to always drop when reconnecting
+- Add audioSessionId to join frame to always drop when reconnecting
 
 ### Changed
 - Update test results to Sauce Labs before emitting CloudWatch metrics for integration tests
