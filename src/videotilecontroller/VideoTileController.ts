@@ -20,17 +20,19 @@ export default interface VideoTileController {
 
   /**
    * Unbinds the video element from the tile.
+   * The video tile's bounded video element and that element's width and height are set to null.
    */
   unbindVideoElement(tileId: number): void;
 
   /**
-   * Starts sharing the local video tile, creating a new video tile if one does
-   * not already exist. It returns the the tile id of the video tile.
+   * Starts sharing the local video tile by creating a new video tile if one does not already exist.
+   * Binds the created local video tile to the local video stream and then returns its tile id.
    */
   startLocalVideoTile(): number;
 
   /**
    * Stops a local video tile, if it exists.
+   * The bounded video stream associated with the local video tile is released and set to null.
    */
   stopLocalVideoTile(): void;
 
@@ -50,12 +52,14 @@ export default interface VideoTileController {
   getLocalVideoTile(): VideoTile | null;
 
   /**
-   * Pauses the video tile, if it exists.
+   * Pauses the video tile if it exists and sends the updated video tile state
+   * to the meeting session's AudioVideoObserver’s [[videoTileDidUpdate]] callback.
    */
   pauseVideoTile(tileId: number): void;
 
   /**
-   * Unpauses the video tile, if it exists.
+   * Unpauses the video tile if it exists and sends the updated video tile state
+   * to the meeting session's AudioVideoObserver’s [[videoTileDidUpdate]] callback.
    */
   unpauseVideoTile(tileId: number): void;
 
@@ -85,7 +89,9 @@ export default interface VideoTileController {
   addVideoTile(): VideoTile;
 
   /**
-   * Removes a tile by tile id.
+   * Disconnects video source from the video element bounded with the video tile,
+   * removes the tile by the tileId and the AudioVideoObserver’s [[videoTileWasRemoved]] callback
+   * is called with the removed tile id.
    */
   removeVideoTile(tileId: number): void;
 
