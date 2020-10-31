@@ -1,0 +1,116 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: CI Workflow
+
+on:
+  push:
+    branches: [ github-actions ]
+  pull_request:
+    branches:
+      - github-actions
+
+jobs:
+  
+  build:
+    name: Build and Run Unit Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+    - name: Checkout Package
+      uses: actions/checkout@v2
+    - name: Using Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Clean Install
+      run: npm ci
+    - name: Build
+      run: npm run build:release
+
+  setup_integ_tests:
+    continue-on-error: true
+    name: Setup
+    needs: build
+    runs-on: ubuntu-latest
+    outputs:
+      integration_test_required: ${{ steps.integration_test_required.outputs.needs_integration_test }}
+    steps:
+      - name: Checkout Package
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Using Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Check if Integ Tests need to Run
+        run: node script/needs-integration-test.js
+      - name: Set integration test requirement to true
+        id: integration_test_required
+        if: ${{ success() }}
+        run: echo '::set-output name=needs_integration_test::true'
+      - name: Set integration test requirement to false
+        if: ${{ failure() }}
+        run: echo '::set-output name=needs_integration_test::false'
+
+  run-integ-tests:
+    name: Run Integ Tests
+    needs: setup_integ_tests
+    if: ${{needs.setup_integ_tests.outputs.integration_test_required}}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+        integ_test_name: [audio, video, screen-share, content-share, data-message, meeting-readiness-checker, meeting-end]
+
+    env: 
+      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+      SELENIUM_GRID_PROVIDER: ${{secrets.SELENIUM_GRID_PROVIDER}}
+      TEST_TYPE: ${{secrets.TEST_TYPE}}
+      BROWSER_STACK_USERNAME: ${{secrets.BROWSER_STACK_USERNAME}}
+      BROWSER_STACK_ACCESSKEY: ${{secrets.BROWSER_STACK_ACCESSKEY}}
+      CLOUD_WATCH_METRIC: false
+    steps:
+      - name: Checkout Chime SDK Repo
+        uses: actions/checkout@v2
+      - name: Setup Node.js - ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install AWS CLI
+        run: script/travis-awscli-installation
+      - name: Install Kite
+        run: integration/js/script/install-kite
+      - name: Setup Sauce Connect Proxy
+        uses: saucelabs/sauce-connect-action@master
+        with:
+          username: ${{ secrets.SAUCE_USERNAME }}
+          accessKey: ${{ secrets.SAUCE_ACCESS_KEY }}
+          noSSLBumpDomains: all
+      - name: Clean Install
+        run: npm ci
+      - name: Run Integ Test - ${{ matrix.integ_test_name }}
+        run: npm run test:integration-${{ matrix.integ_test_name }}
+      
+
+  # deploy:
+  #   needs: run-integ-tests
+  #   name: Deploy Demo App
+  #   env:
+        # GAMMA_AWS_ACCESS_KEY_ID: ${{}}
+        # GAMMA_AWS_SECRET_ACCESS_KEY: ${{}}
+        # AWS_DEFAULT_REGION: ${{}}
+        # AWS_DEFAULT_OUTPUT: ${{}}
+        # GAMMA_CHIME_ENDPOINT: ${{}}
+        # DEVO_AWS_ACCESS_KEY_ID: ${{}}
+        # DEVO_AWS_SECRET_ACCESS_KEY: ${{}}
+  #   steps:
+  #     - name: Install SAM CLI
+  #       run: script/travis-awscli-installation
+  #     - name: Deploy the Serverless Demo App
+  #       run: script/deploy-canary-demo

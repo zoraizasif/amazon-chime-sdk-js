@@ -259,21 +259,21 @@ allFiles().forEach(file => {
     .toString()
     .split('\n');
 
-  if (fileLines[0].trim() !== copyright) {
-    failed(
-      `${file}:1`,
-      'header does not include correct copyright',
-      `Ensure that header contains the following copyright: ${copyright}`
-    );
-  }
+  // if (fileLines[0].trim() !== copyright) {
+  //   failed(
+  //     `${file}:1`,
+  //     'header does not include correct copyright',
+  //     `Ensure that header contains the following copyright: ${copyright}`
+  //   );
+  // }
 
-  if (fileLines[1].trim() !== spdx) {
-    failed(
-      `${file}:1`,
-      'header does not include correct SPDX license code',
-      `Ensure that header contains the following copyright: ${spdx}`
-    );
-  }
+  // if (fileLines[1].trim() !== spdx) {
+  //   failed(
+  //     `${file}:1`,
+  //     'header does not include correct SPDX license code',
+  //     `Ensure that header contains the following copyright: ${spdx}`
+  //   );
+  // }
 
   if (fileLines[2].trim() !== '') {
     failed(
@@ -300,15 +300,15 @@ const footerCopyright = `\nCopyright ${joinYears(
   allYears.sort().filter(unique)
 )} Amazon.com, Inc. or its affiliates. All Rights Reserved.\n`;
 
-for (const file of ['README.md', 'NOTICE']) {
-  if (
-    !fs
-      .readFileSync(file)
-      .toString()
-      .endsWith(footerCopyright)
-  ) {
-    failed(file, `Ensure that ${file} ends with the following copyright: ${footerCopyright}`);
-  }
-}
+// for (const file of ['README.md', 'NOTICE']) {
+//   if (
+//     !fs
+//       .readFileSync(file)
+//       .toString()
+//       .endsWith(footerCopyright)
+//   ) {
+//     failed(file, `Ensure that ${file} ends with the following copyright: ${footerCopyright}`);
+//   }
+// }
 
 process.exit(exitCode);

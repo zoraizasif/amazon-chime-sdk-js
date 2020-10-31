@@ -1429,7 +1429,7 @@ export class DemoMeetingApp implements AudioVideoObserver, DeviceChangeObserver,
   }
 
   audioVideoDidStartConnecting(reconnecting: boolean): void {
-    this.log(`session connecting. reconnecting: ${reconnecting}`);
+    this.log(`Session connecting. reconnecting: ${reconnecting}`);
   }
 
   audioVideoDidStart(): void {
